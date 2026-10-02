@@ -1,0 +1,403 @@
+{
+  "commerce_suite": {
+    "testedAt": "2026-09-25T16:48:36.540Z",
+    "results": [
+      {
+        "pass": true,
+        "test": "Existing QA admin recognized",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Admin category creation",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Admin transactional draft product save",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Publishing without an image rejected",
+        "error": "Upload at least one image before publishing",
+        "sqlstate": "P0001"
+      },
+      {
+        "pass": true,
+        "test": "Unuploaded image rejected",
+        "error": "Product image not uploaded",
+        "sqlstate": "P0001"
+      },
+      {
+        "pass": true,
+        "test": "Failed publish leaves draft unchanged",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Anonymous reader cannot see draft",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Anonymous add to cart rejected",
+        "error": "permission denied for function add_to_cart",
+        "sqlstate": "42501"
+      },
+      {
+        "pass": true,
+        "test": "Anonymous reader sees published product",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Anonymous reader sees active variant",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Customer is not admin",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Customer cannot change product price",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Customer product-save RPC rejected",
+        "error": "Admin access required",
+        "sqlstate": "42501"
+      },
+      {
+        "pass": true,
+        "test": "Customer category creation rejected",
+        "error": "new row violates row-level security policy for table \"categories\"",
+        "sqlstate": "42501"
+      },
+      {
+        "pass": true,
+        "test": "Customer add to cart persists",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Customer quantity update persists",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Customer cart removal persists",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Zero cart quantity rejected",
+        "error": "Quantity must be between 1 and 99",
+        "sqlstate": "22023"
+      },
+      {
+        "pass": true,
+        "test": "Wishlist add succeeds",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Review submission succeeds",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Owner can read own order",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Owner can read own order items",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Owner can read own order history",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Customer cannot set order status",
+        "error": "Admin access required",
+        "sqlstate": "42501"
+      },
+      {
+        "pass": true,
+        "test": "COD checkout creates an order",
+        "result": {
+          "order_id": "15520a7a-03f4-4f15-ae2a-6e717c034a54",
+          "total_cents": 25000,
+          "order_number": 5
+        }
+      },
+      {
+        "pass": true,
+        "test": "Checkout uses server product price",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Checkout decrements stock",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Checkout clears cart",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Other customer cannot see cart",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Other customer cannot see wishlist",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Other customer cannot see order",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Other customer cannot see order items",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Other customer cannot see order history",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Other customer cannot see pending review",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Customer cannot self-approve a review",
+        "error": "new row violates row-level security policy for table \"reviews\"",
+        "sqlstate": "42501"
+      },
+      {
+        "pass": true,
+        "test": "Admin can see customer order",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Admin status update persists",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Admin status change adds history",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Invalid order status rejected",
+        "error": "Invalid status",
+        "sqlstate": "P0001"
+      },
+      {
+        "pass": true,
+        "test": "Admin approves a review",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Approved review is publicly readable",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Admin hides a review",
+        "actual": true
+      },
+      {
+        "pass": true,
+        "test": "Hidden review is no longer publicly readable",
+        "actual": true
+      }
+    ]
+  },
+  "regression_suite": {
+    "testedAt": "2026-09-25T16:32:57.647Z",
+    "results": [
+      {
+        "pass": true,
+        "test": "Add beyond stock rejected",
+        "error": "Requested quantity exceeds available stock",
+        "sqlstate": "23514"
+      },
+      {
+        "pass": true,
+        "test": "Null quantity rejected",
+        "error": "Quantity must be between 1 and 99",
+        "sqlstate": "22023"
+      },
+      {
+        "pass": true,
+        "test": "Empty cart checkout rejected",
+        "error": "Your bag is empty",
+        "sqlstate": "P0001"
+      },
+      {
+        "pass": true,
+        "test": "Invalid address rejected",
+        "error": "Enter a valid name, street address, city and country",
+        "sqlstate": "22023"
+      },
+      {
+        "pass": true,
+        "test": "Customer shipping override rejected",
+        "error": "Shipping is free; the delivery charge cannot be overridden",
+        "sqlstate": "22023"
+      },
+      {
+        "pass": true,
+        "test": "Null request ID rejected",
+        "error": "Checkout request ID is required",
+        "sqlstate": "22023"
+      },
+      {
+        "pass": true,
+        "test": "Checkout stock revalidated",
+        "error": "Insufficient stock for one or more items",
+        "sqlstate": "23514"
+      },
+      {
+        "pass": true,
+        "test": "Failed checkout preserves cart"
+      },
+      {
+        "pass": true,
+        "test": "Failed checkout creates no order"
+      },
+      {
+        "pass": true,
+        "test": "Idempotent retry returns same order"
+      },
+      {
+        "pass": true,
+        "test": "Retry does not decrement stock twice"
+      },
+      {
+        "pass": true,
+        "test": "Totals cannot be supplied in address"
+      },
+      {
+        "pass": true,
+        "test": "Customer cannot record payment",
+        "error": "Admin access required",
+        "sqlstate": "42501"
+      },
+      {
+        "pass": true,
+        "test": "Customer creates ticket and message"
+      },
+      {
+        "pass": true,
+        "test": "Customer cannot set support status",
+        "error": "Admin access required",
+        "sqlstate": "42501"
+      },
+      {
+        "pass": true,
+        "test": "Other customer cannot see ticket"
+      },
+      {
+        "pass": true,
+        "test": "Other customer cannot see messages"
+      },
+      {
+        "pass": true,
+        "test": "Other customer cannot reply",
+        "error": "Ticket not found",
+        "sqlstate": "42501"
+      },
+      {
+        "pass": true,
+        "test": "Other customer cannot claim order in ticket",
+        "error": "Order not found",
+        "sqlstate": "42501"
+      },
+      {
+        "pass": true,
+        "test": "Other customer cannot retrieve idempotent order",
+        "error": "Your bag is empty",
+        "sqlstate": "P0001"
+      },
+      {
+        "pass": true,
+        "test": "Backward order transition rejected",
+        "error": "Order status can only move forward",
+        "sqlstate": "P0001"
+      },
+      {
+        "pass": true,
+        "test": "Unpaid refund rejected",
+        "error": "Only a paid order can be marked refunded",
+        "sqlstate": "P0001"
+      },
+      {
+        "pass": true,
+        "test": "Manual payment status persists"
+      },
+      {
+        "pass": true,
+        "test": "Payment note is recorded"
+      },
+      {
+        "pass": true,
+        "test": "Cancellation restores stock"
+      },
+      {
+        "pass": true,
+        "test": "Repeated cancellation does not duplicate stock"
+      },
+      {
+        "pass": true,
+        "test": "Cancellation adds history once"
+      },
+      {
+        "pass": true,
+        "test": "Cancelled order cannot reopen",
+        "error": "This order is already closed",
+        "sqlstate": "P0001"
+      },
+      {
+        "pass": true,
+        "test": "Admin support reply has trusted sender role"
+      },
+      {
+        "pass": true,
+        "test": "Customer follow-up reopens support ticket"
+      },
+      {
+        "pass": true,
+        "test": "Anonymous checkout permission revoked",
+        "error": "permission denied for function checkout_order",
+        "sqlstate": "42501"
+      },
+      {
+        "pass": true,
+        "test": "Anonymous support permission revoked",
+        "error": "permission denied for function create_support_ticket",
+        "sqlstate": "42501"
+      }
+    ]
+  },
+  "method": "Live database SQL under existing QA auth claims. Fixtures rolled back; does not prove browser sign-in or image upload."
+}

@@ -1,0 +1,15 @@
+{
+  "users": 4,
+  "admins": 2,
+  "orders": 0,
+  "reviews": 0,
+  "products": 0,
+  "cart_items": 0,
+  "categories": 0,
+  "checked_at": "2026-09-26T09:01:20.82109+00:00",
+  "owner_is_admin": true,
+  "repair_applied": true,
+  "wishlist_items": 0,
+  "support_tickets": 0,
+  "checkout_function": true
+}
