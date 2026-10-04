@@ -1,10 +1,12 @@
 import {useState} from 'react';
 import {Link} from 'react-router-dom';
 import {Plus,Trash2} from 'lucide-react';
+import {toast} from 'sonner';
 import {useProducts} from '../../hooks/useProducts';
-import {deleteProduct} from '../../services/catalog';
+import {archiveProduct,deleteProduct} from '../../services/catalog';
 import {Loading,Empty,ErrorState} from '../../components/Feedback';
 import {money,imageUrl} from '../../lib/supabase';
+import Modal from '../../components/common/Modal';
 import DataTable from '../../components/admin/DataTable';
 import StatusBadge from '../../components/admin/StatusBadge';
 
@@ -15,13 +17,29 @@ export default function Products({isAccessory=null,showHeading=true}){
   const [sort,setSort]=useState({key:'product',direction:'asc'});
   const [busy,setBusy]=useState(null);
   const [actionError,setActionError]=useState('');
+  const [deletingProduct,setDeletingProduct]=useState(null);
+  const [deleteBusy,setDeleteBusy]=useState(false);
+  const [deleteError,setDeleteError]=useState('');
 
   async function remove(product){
     if(!window.confirm(`Delete "${product.name}" from the storefront? It will be archived; order history and related records will be preserved.`))return;
     setBusy(product.id);setActionError('');
-    try{await deleteProduct(product.id);await query.refresh();}
+    try{await archiveProduct(product.id);await query.refresh();}
     catch(error){setActionError(error.message);}
     finally{setBusy(null);}
+  }
+
+  async function permanentlyDelete(){
+    if(!deletingProduct||deleteBusy)return;
+    setDeleteBusy(true);setDeleteError('');
+    try{
+      const result=await deleteProduct(deletingProduct.id);
+      await query.refresh();
+      setDeletingProduct(null);
+      if(result.storageCleanupError)toast.error(`Product deleted, but image cleanup failed: ${result.storageCleanupError}`);
+      else toast.success('Product deleted successfully.');
+    }catch(error){setDeleteError(error.message||'Could not delete this product.');}
+    finally{setDeleteBusy(false);}
   }
 
   const rows=[...(query.data||[])].filter(product=>(!search||`${product.name} ${product.categories?.name||''}`.toLowerCase().includes(search.toLowerCase()))&&(!status||product.status===status)).sort((a,b)=>{
@@ -39,7 +57,7 @@ export default function Products({isAccessory=null,showHeading=true}){
     {key:'price',label:'Price',sortable:true,numeric:true,render:product=>money(product.price_cents)},
     {key:'stock',label:'Inventory',sortable:true,render:product=>`${product.product_variants.filter(variant=>variant.active).reduce((sum,variant)=>sum+variant.stock,0)} units`},
     {key:'status',label:'Status',sortable:true,render:product=><StatusBadge status={product.status}/>},
-    {key:'actions',label:'Actions',render:product=><div className="admin-table-actions"><Link to={`/admin/products/${product.id}/edit${isAccessory===null?'':`?group=${isAccessory?'accessories':'collections'}`}`}>Edit</Link><button className="text-button" type="button" disabled={busy===product.id||product.status==='archived'} onClick={()=>remove(product)} aria-label={`Archive ${product.name}`} title={product.status==='archived'?'Already archived':'Archive and remove from the storefront'}>{busy===product.id?'Archiving…':<><Trash2 size={14}/><span>Archive</span></>}</button></div>},
+    {key:'actions',label:'Actions',render:product=><div className="admin-table-actions"><Link to={`/admin/products/${product.id}/edit${isAccessory===null?'':`?group=${isAccessory?'accessories':'collections'}`}`}>Edit</Link><button className="text-button" type="button" disabled={busy===product.id||product.status==='archived'} onClick={()=>remove(product)} aria-label={`Archive ${product.name}`} title={product.status==='archived'?'Already archived':'Archive and remove from the storefront'}>{busy===product.id?'Archiving…':<><Trash2 size={14}/><span>Archive</span></>}</button>{isAccessory===null&&showHeading&&<button className="text-button admin-product-delete-trigger" type="button" disabled={deleteBusy} onClick={()=>{setDeletingProduct(product);setDeleteError('');}} aria-label={`Delete ${product.name}`} title="Permanently delete product"><Trash2 size={14}/><span>Delete</span></button>}</div>},
   ];
 
   return <>
@@ -47,5 +65,8 @@ export default function Products({isAccessory=null,showHeading=true}){
     <div className="admin-list-toolbar"><label className="admin-search-field"><span className="visually-hidden">Search products</span><input type="search" placeholder="Search product or category" aria-label="Search products" value={search} onChange={event=>setSearch(event.target.value)}/></label><label className="admin-select-field"><span>Status</span><select value={status} onChange={event=>setStatus(event.target.value)}><option value="">All statuses</option><option value="published">Published</option><option value="draft">Draft</option><option value="archived">Archived</option></select></label><span className="admin-list-toolbar__count">{rows.length} {rows.length===1?'product':'products'}</span></div>
     {actionError&&<p className="error" role="alert">{actionError}</p>}
     {query.loading&&!query.data?<Loading label="Loading products…"/>:query.error?<ErrorState error={query.error} retry={query.refresh}/>:!query.data?.length?<Empty title="Your first piece starts here." text="Create a product, add its photographs and variants, then publish it to the shop." link={`/admin/products/create${isAccessory===null?'':`?group=${isAccessory?'accessories':'collections'}`}`} action="Add your first product"/>:<DataTable caption="Product catalog" columns={columns} rows={rows} rowKey={product=>product.id} sortKey={sort.key} sortDirection={sort.direction} onSort={sortBy} empty="No products match these filters."/>}
+    <Modal open={Boolean(deletingProduct)} onClose={()=>{if(!deleteBusy)setDeletingProduct(null);}} closeOnBackdrop={!deleteBusy} labelledBy="admin-delete-product-title" describedBy="admin-delete-product-description" className="admin-product-delete-modal">
+      {deletingProduct&&<div className="admin-product-delete-modal__body"><h2 id="admin-delete-product-title">Delete product?</h2><p id="admin-delete-product-description">You are about to permanently delete:</p><div className="admin-product-delete-modal__product">{deletingProduct.product_images?.[0]&&<img src={imageUrl(deletingProduct.product_images[0].path)} alt=""/>}<strong>{deletingProduct.name}</strong></div><p className="admin-product-delete-modal__warning">This action cannot be undone.</p>{deleteError&&<p className="admin-product-delete-modal__error" role="alert">{deleteError}</p>}<div className="admin-product-delete-modal__actions"><button type="button" className="admin-product-delete-modal__cancel" onClick={()=>setDeletingProduct(null)} disabled={deleteBusy}>Cancel</button><button type="button" className="admin-product-delete-modal__confirm" onClick={permanentlyDelete} disabled={deleteBusy}>{deleteBusy?'Deleting…':'Delete permanently'}</button></div></div>}
+    </Modal>
   </>;
 }

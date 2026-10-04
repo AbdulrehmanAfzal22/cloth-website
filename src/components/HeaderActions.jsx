@@ -15,7 +15,7 @@ export default function HeaderActions(){
     <Link className="luxury-header__action luxury-header__action--wishlist" to="/wishlist" aria-label="Wishlist" title="Wishlist"><Heart size={19} strokeWidth={1.55}/><span className="luxury-header__action-label">Wishlist</span></Link>
     <Link className="luxury-header__action luxury-header__action--bag" to="/cart" aria-label={bagLabel} title={bagLabel}>
       <span className="luxury-header__bag-icon"><ShoppingBag size={19} strokeWidth={1.55}/>{itemCount>0&&<span className="luxury-header__bag-count" aria-hidden="true">{itemCount>99?'99+':itemCount}</span>}</span>
-      <span className="luxury-header__action-label">Bag{itemCount>0?` (${itemCount})`:''}</span>
+      <span className="luxury-header__action-label">Bag</span>
     </Link>
   </nav>;
 }

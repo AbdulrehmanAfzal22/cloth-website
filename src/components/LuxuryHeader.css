@@ -15,7 +15,7 @@
 .luxury-header__action:hover>svg,.luxury-header__action:hover .luxury-header__bag-icon>svg{transform:scale(1.09)}
 .luxury-header__action-label{font:500 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase}
 .luxury-header__bag-icon{position:relative;display:grid;width:24px;height:28px;place-items:center}
-.luxury-header__bag-count{position:absolute;top:-4px;right:-8px;display:grid;min-width:16px;height:16px;padding-inline:3px;place-items:center;border:1px solid var(--color-ivory);border-radius:var(--radius-pill);background:var(--color-bronze);color:#fff;font:600 8px/1 var(--font-body)}
+.luxury-header__bag-count{position:absolute;top:-4px;right:-8px;display:grid;min-width:16px;height:16px;padding-inline:3px;place-items:center;border:1px solid var(--color-ivory);border-radius:var(--radius-pill);background:#a83232;color:#fff;font:600 8px/1 var(--font-body);white-space:nowrap}
 .luxury-header--scrolled .luxury-header__bag-count{border-color:var(--color-ivory)}
 .luxury-header .luxury-header__menu-toggle{display:none;width:44px;height:44px;place-items:center;border:0;background:transparent;color:inherit;cursor:pointer}
 .luxury-header__menu-toggle:focus-visible,.luxury-header__drawer-close:focus-visible,.luxury-header__action:focus-visible,.luxury-header__desktop-nav a:focus-visible,.luxury-header__wordmark:focus-visible,.luxury-header__drawer a:focus-visible{outline:2px solid currentColor;outline-offset:4px}

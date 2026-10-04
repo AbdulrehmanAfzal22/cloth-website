@@ -20,6 +20,6 @@ export default function StoreLayout(){
 		<LuxuryHeader home={home}/>
 		<motion.main id="main" tabIndex="-1" initial={{opacity:1}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:reducedMotion?0:.45,ease:[.22,1,.36,1]}}><Outlet/></motion.main>
 		{home?<LuxuryFooter/>:<StoreFooter/>}
-		<FloatingSupportButton/>
+		{location.pathname!=='/contact-support'&&<FloatingSupportButton/>}
 	</>;
 }

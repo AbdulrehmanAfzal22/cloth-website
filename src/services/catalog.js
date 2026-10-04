@@ -24,12 +24,34 @@ export async function getActiveCategories(isAccessory=null){
  if(isAccessory!==null)q=q.eq('is_accessory',isAccessory);
  return unwrap(await q);
 }
-export async function deleteProduct(productId){
+export async function archiveProduct(productId){
  if(!productId)throw new Error('A product ID is required.');
  const {data,error}=await supabase.from('products').update({status:'archived',featured:false}).eq('id',productId).select('id').maybeSingle();
  if(error)throw error;
  if(!data)throw new Error('Product not found or you do not have permission to archive it.');
  return data.id;
+}
+export async function deleteProduct(productId){
+ if(!productId)throw new Error('A product ID is required.');
+ const result=unwrap(await supabase.rpc('delete_product',{p_product_id:productId}));
+ const imagePaths=result?.image_paths||[];
+ if(imagePaths.some(path=>typeof path!=='string'||!path.startsWith(`${productId}/`)))return {id:result.product_id,storageCleanupError:'Image cleanup was skipped because an image path was outside its product folder.'};
+ const storage=supabase.storage.from('product-images');
+ const paths=new Set(imagePaths);
+ let offset=0;
+ while(true){
+  const {data:objects,error}=await storage.list(productId,{limit:1000,offset});
+  if(error)return {id:result.product_id,storageCleanupError:error.message};
+  for(const object of objects||[])if(object.id)paths.add(`${productId}/${object.name}`);
+  if(!objects||objects.length<1000)break;
+  offset+=objects.length;
+ }
+ const files=[...paths];
+ for(let index=0;index<files.length;index+=1000){
+  const {error}=await storage.remove(files.slice(index,index+1000));
+  if(error)return {id:result.product_id,storageCleanupError:error.message};
+ }
+ return {id:result.product_id,storageCleanupError:null};
 }
 export async function saveProduct(payload,files,onProgress){
  const uploaded=[];
